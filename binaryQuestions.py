@@ -24,7 +24,6 @@ for (sheet,df) in dic_analysis.items():
     df_binary_eyetracking_list.append(df_binary_eyetracking)
 
 df_binary_eyetracking_all = pd.concat(df_binary_eyetracking_list,ignore_index=True)
-print(df_binary_eyetracking_all)
 
 # Making each question into phone 1 or phone 2
 def turntable(row):
@@ -53,5 +52,24 @@ phone1.reset_index(drop=True,inplace=True)
 phone2.rename(columns={7:'Phone 2 - Owned',8:'Phone 2 - Familiarity',9:'Phone 2 - Present'},inplace=True)
 phone2.reset_index(drop=True,inplace=True)
 
-binary_responses = pd.concat([phone_selection,phone1,phone2], axis=1)
+eyetracking_phone1 = df_binary_eyetracking_all.iloc[::2].copy()
+eyetracking_phone2 = df_binary_eyetracking_all.iloc[1::2].copy()
+
+eyetracking_phone1.reset_index(drop=True,inplace=True)
+eyetracking_phone2.reset_index(drop=True,inplace=True)
+
+eyetracking_phone1.drop(columns=[' AOI Name', 'Unnamed: 11'], inplace=True)
+eyetracking_phone2.drop(columns=[' AOI Name', ' AOI Start (sec)', ' AOI Duration (sec - U=UserControlled)', ' Viewers (#)', ' Total Viewers (#)', 'Unnamed: 11'], inplace=True)
+
+eyetracking_phone1.rename(columns={4:'Phone 1 - Ave Time to 1st View (sec)', 5:'Phone 1 - Ave Time Viewed (sec)', 6:'Phone 1 -  Ave Time Viewed (%)', 7:'Phone 1 -  Ave Fixations (#)', 8:'Phone 1 -  Revisitors (#)', 9:'Phone 1 -  Average Revisits (#)'}, inplace=True)
+
+binary_responses = pd.concat([phone_selection,phone1,phone2,eyetracking_phone1,eyetracking_phone2], axis=1)
 binary_responses.rename(columns={0:'Phone Choice'}, inplace=True)
+
+print(eyetracking_phone1)
+
+# writer = pd.ExcelWriter('output.xlsx')
+# # write dataframe to excel
+# binary_responses.to_excel(writer)
+# # save the excel
+# writer.save()
