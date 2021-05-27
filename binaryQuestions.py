@@ -61,12 +61,13 @@ eyetracking_phone2.reset_index(drop=True,inplace=True)
 eyetracking_phone1.drop(columns=[' AOI Name', 'Unnamed: 11'], inplace=True)
 eyetracking_phone2.drop(columns=[' AOI Name', ' AOI Start (sec)', ' AOI Duration (sec - U=UserControlled)', ' Viewers (#)', ' Total Viewers (#)', 'Unnamed: 11'], inplace=True)
 
-eyetracking_phone1.rename(columns={4:'Phone 1 - Ave Time to 1st View (sec)', 5:'Phone 1 - Ave Time Viewed (sec)', 6:'Phone 1 -  Ave Time Viewed (%)', 7:'Phone 1 -  Ave Fixations (#)', 8:'Phone 1 -  Revisitors (#)', 9:'Phone 1 -  Average Revisits (#)'}, inplace=True)
+eyetracking_phone1.rename(columns={' Ave Time to 1st View (sec)':'Phone 1 - Ave Time to 1st View (sec)', ' Ave Time Viewed (sec)':'Phone 1 - Ave Time Viewed (sec)', ' Ave Time Viewed (%)':'Phone 1 -  Ave Time Viewed (%)', ' Ave Fixations (#)':'Phone 1 -  Ave Fixations (#)', ' Revisitors (#)':'Phone 1 -  Revisitors (#)', ' Average Revisits (#)':'Phone 1 -  Average Revisits (#)'}, inplace=True)
+eyetracking_phone2.rename(columns={' Ave Time to 1st View (sec)':'Phone 2 - Ave Time to 1st View (sec)', ' Ave Time Viewed (sec)':'Phone 2 - Ave Time Viewed (sec)', ' Ave Time Viewed (%)':'Phone 2 -  Ave Time Viewed (%)', ' Ave Fixations (#)':'Phone 2 -  Ave Fixations (#)', ' Revisitors (#)':'Phone 2 -  Revisitors (#)', ' Average Revisits (#)':'Phone 2 -  Average Revisits (#)'}, inplace=True)
 
 binary_responses = pd.concat([phone_selection,phone1,phone2,eyetracking_phone1,eyetracking_phone2], axis=1)
 binary_responses.rename(columns={0:'Phone Choice'}, inplace=True)
 
-print(eyetracking_phone1)
+print(binary_responses)
 
 # writer = pd.ExcelWriter('output.xlsx')
 # # write dataframe to excel
