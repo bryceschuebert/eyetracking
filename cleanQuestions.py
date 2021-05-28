@@ -5,8 +5,8 @@ import numpy as np
 
 def getClean():
     # Read in excel files
-    dic_responses = pd.read_excel('excelFiles\Mobile Phone Eye Tracking Survey Responses.xlsx', header=None, sheet_name=None)
-    dic_analysis = pd.read_excel('excelFiles\Mobile Phone Eye Tracking Survey Data Analysis.xlsx', sheet_name=None)
+    dic_responses = pd.read_excel('excelFiles/Mobile Phone Eye Tracking Survey Responses.xlsx', header=None, sheet_name=None)
+    dic_analysis = pd.read_excel('excelFiles/Mobile Phone Eye Tracking Survey Data Analysis.xlsx', sheet_name=None)
 
     # Pop personal info from sheet 1
     demographic_df = dic_responses['Sheet1']

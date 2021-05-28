@@ -31,32 +31,49 @@ df_ranking_all.drop(columns=[6,7,8,9], inplace=True)
 
 print(df_ranking_all)
 
-df_ranking_all.lstrip()
+df_ranking_all[0] = df_ranking_all[0].str.lstrip()
 
+phone1_names = ['Nokia Lumia 1520 Green','Samsung Galaxy S5','Micromax Canvas Gold','HTC One E8','Motorola Droid Turbo']
+phone2_names = ['Nokia Lumia 1520 White','Motorola Droid Maxx','Huawei Ascend G620S','iPhone 6 Plus','iPhone 6 Plus White']
+phone3_names = ['Nokia Lumia 1520 Red','LG G2','Samsung Galaxy A5','Blackberry Z30',"Blackberry Porsche Design P'9981"]
+phone4_names = ['Nokia Lumia 1520 Black','Apple iPhone 6','Panasonic P31','Nokia Lumia 930','Blu Win HD']
+phone5_names = ['Nokia Lumia 1520 Yellow','Google Nexus 5','HTC Butterfly','Nokia N8','Nokia 808 Pureview']
 
-df_ranking_all.replace({:'Phone 1',:'Phone 2',:'Phone 3',:'Phone 4',:'Phone 5'}})
+df_ranking_all.replace(phone1_names,'Phone 1',inplace=True)
+df_ranking_all.replace(phone2_names,'Phone 2',inplace=True)
+df_ranking_all.replace(phone3_names,'Phone 3',inplace=True)
+df_ranking_all.replace(phone4_names,'Phone 4',inplace=True)
+df_ranking_all.replace(phone5_names,'Phone 5',inplace=True)
 
 df_rank1 = df_ranking_all.iloc[:,[0,1]].copy()
 df_rank1.dropna(inplace=True)
-df_rank1.drop(columns=[0], inplace=True)
+df_rank1.drop(columns=[1], inplace=True)
+df_rank1.reset_index(drop=True,inplace=True)
 
 df_rank2 = df_ranking_all.iloc[:,[0,2]].copy()
 df_rank2.dropna(inplace=True)
-df_rank2.drop(columns=[0], inplace=True)
+df_rank2.drop(columns=[2], inplace=True)
+df_rank2.reset_index(drop=True,inplace=True)
 
 df_rank3 = df_ranking_all.iloc[:,[0,3]].copy()
 df_rank3.dropna(inplace=True)
-df_rank3.drop(columns=[0], inplace=True)
+df_rank3.drop(columns=[3], inplace=True)
+df_rank3.reset_index(drop=True,inplace=True)
 
 df_rank4 = df_ranking_all.iloc[:,[0,4]].copy()
 df_rank4.dropna(inplace=True)
-df_rank4.drop(columns=[0], inplace=True)
+df_rank4.drop(columns=[4], inplace=True)
+df_rank4.reset_index(drop=True,inplace=True)
 
 df_rank5 = df_ranking_all.iloc[:,[0,5]].copy()
 df_rank5.dropna(inplace=True)
-df_rank5.drop(columns=[0], inplace=True)
+df_rank5.drop(columns=[5], inplace=True)
+df_rank5.reset_index(drop=True,inplace=True)
 
+df_ranking_clean = pd.concat([df_rank1,df_rank2,df_rank3,df_rank4,df_rank5],axis=1,ignore_index=True)
+df_ranking_clean.rename(columns={0:'Rank 1',1:'Rank 2',2:'Rank 3',3:'Rank 4',4:'Rank 5'},inplace=True)
 
+print(df_ranking_clean)
 
 
 # phone_selection_color = df_threechoice_all.apply(threechoice_search, axis=1)
