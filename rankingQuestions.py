@@ -8,6 +8,13 @@ dic_analysis, dic_responses = getClean()
 # Ranking 
 df_ranking_list = []
 
+# Participants didnt answer part of question
+dic_analysis.pop('JH048')
+dic_analysis.pop('AH001')
+dic_responses.pop('JH048')
+dic_responses.pop('AH001')
+
+# Getting correct columns
 for (sheet,df) in dic_responses.items():
     df_ranking_color = df.iloc[[41,42,43,44,45],:].copy()
     df_ranking_same_features = df.iloc[[50,51,52,53,54,55,56,57,58,59],:].copy()
@@ -20,16 +27,17 @@ df_ranking_all = pd.concat(df_ranking_list,ignore_index=True)
 df_ranking_ofp = df_ranking_all.iloc[:,[7,8,9]].copy()
 df_ranking_all.drop(columns=[6,7,8,9], inplace=True)
 
+df_ranking_eyetracking_list = []
 
-# df_threechoice_eyetracking_list = []
+for (sheet,df) in dic_analysis.items():
+    df_ranking_color_eyetracking = df.iloc[18:23,:]
+    df_ranking_samefeatures_eyetracking = df.iloc[27:37,:]
+    df_ranking_size_eyetracking = df.iloc[52:62,:]
+    df_ranking_eyetracking_list.append(df_ranking_color_eyetracking)
+    df_ranking_eyetracking_list.append(df_ranking_samefeatures_eyetracking)
+    df_ranking_eyetracking_list.append(df_ranking_size_eyetracking)
 
-# for (sheet,df) in dic_analysis.items():
-#     df_ranking_color_eyetracking = df.iloc[[6,7,8,9,10,11],:]
-#     df_threechoice_eyetracking_list.append(df_threechoice_eyetracking)
-
-# df_threechoice_eyetracking_all = pd.concat(df_threechoice_eyetracking_list,ignore_index=True)
-
-print(df_ranking_all)
+df_ranking_eyetracking_all = pd.concat(df_ranking_eyetracking_list,ignore_index=True)
 
 df_ranking_all[0] = df_ranking_all[0].str.lstrip()
 
@@ -73,39 +81,56 @@ df_rank5.reset_index(drop=True,inplace=True)
 df_ranking_clean = pd.concat([df_rank1,df_rank2,df_rank3,df_rank4,df_rank5],axis=1,ignore_index=True)
 df_ranking_clean.rename(columns={0:'Rank 1',1:'Rank 2',2:'Rank 3',3:'Rank 4',4:'Rank 5'},inplace=True)
 
-print(df_ranking_clean)
 
+# Eyetracking - splitting eyetracking into 5 phones
+phone1_ofp = df_ranking_ofp.iloc[::5].copy()
+phone2_ofp = df_ranking_ofp.iloc[1::5].copy()
+phone3_ofp = df_ranking_ofp.iloc[2::5].copy()
+phone4_ofp = df_ranking_ofp.iloc[3::5].copy()
+phone5_ofp = df_ranking_ofp.iloc[4::5].copy()
 
-# phone_selection_color = df_threechoice_all.apply(threechoice_search, axis=1)
-# phone_selection_color.reset_index(drop=True,inplace=True)
+phone1_ofp.rename(columns={7:'Phone 1 - Owned',8:'Phone 1 - Familiarity',9:'Phone 1 - Present'},inplace=True)
+phone1_ofp.reset_index(drop=True,inplace=True)
+phone2_ofp.rename(columns={7:'Phone 2 - Owned',8:'Phone 2 - Familiarity',9:'Phone 2 - Present'},inplace=True)
+phone2_ofp.reset_index(drop=True,inplace=True)
+phone3_ofp.rename(columns={7:'Phone 3 - Owned',8:'Phone 3 - Familiarity',9:'Phone 3 - Present'},inplace=True)
+phone3_ofp.reset_index(drop=True,inplace=True)
+phone4_ofp.rename(columns={7:'Phone 4 - Owned',8:'Phone 4 - Familiarity',9:'Phone 4 - Present'},inplace=True)
+phone4_ofp.reset_index(drop=True,inplace=True)
+phone5_ofp.rename(columns={7:'Phone 5 - Owned',8:'Phone 5 - Familiarity',9:'Phone 5 - Present'},inplace=True)
+phone5_ofp.reset_index(drop=True,inplace=True)
 
-# phone1 = df_threechoice_ofp.iloc[::3].copy()
-# phone2 = df_threechoice_ofp.iloc[1::3].copy()
-# phone3 = df_threechoice_ofp.iloc[2::3].copy()
+eyetracking_phone1 = df_ranking_eyetracking_all.iloc[::5].copy()
+eyetracking_phone2 = df_ranking_eyetracking_all.iloc[1::5].copy()
+eyetracking_phone3 = df_ranking_eyetracking_all.iloc[2::5].copy()
+eyetracking_phone4 = df_ranking_eyetracking_all.iloc[3::5].copy()
+eyetracking_phone5 = df_ranking_eyetracking_all.iloc[4::5].copy()
 
+eyetracking_phone1.reset_index(drop=True,inplace=True)
+eyetracking_phone2.reset_index(drop=True,inplace=True)
+eyetracking_phone3.reset_index(drop=True,inplace=True)
+eyetracking_phone4.reset_index(drop=True,inplace=True)
+eyetracking_phone5.reset_index(drop=True,inplace=True)
 
-# phone1.rename(columns={7:'Phone 1 - Owned',8:'Phone 1 - Familiarity',9:'Phone 1 - Present'},inplace=True)
-# phone1.reset_index(drop=True,inplace=True)
-# phone2.rename(columns={7:'Phone 2 - Owned',8:'Phone 2 - Familiarity',9:'Phone 2 - Present'},inplace=True)
-# phone2.reset_index(drop=True,inplace=True)
-# phone3.rename(columns={7:'Phone 3 - Owned',8:'Phone 3 - Familiarity',9:'Phone 3 - Present'},inplace=True)
-# phone3.reset_index(drop=True,inplace=True)
+eyetracking_phone1.drop(columns=[' AOI Name', 'Unnamed: 11'], inplace=True)
+eyetracking_phone2.drop(columns=[' AOI Name', ' AOI Start (sec)', ' AOI Duration (sec - U=UserControlled)', ' Viewers (#)', ' Total Viewers (#)', 'Unnamed: 11'], inplace=True)
+eyetracking_phone3.drop(columns=[' AOI Name', ' AOI Start (sec)', ' AOI Duration (sec - U=UserControlled)', ' Viewers (#)', ' Total Viewers (#)', 'Unnamed: 11'], inplace=True)
+eyetracking_phone4.drop(columns=[' AOI Name', ' AOI Start (sec)', ' AOI Duration (sec - U=UserControlled)', ' Viewers (#)', ' Total Viewers (#)', 'Unnamed: 11'], inplace=True)
+eyetracking_phone5.drop(columns=[' AOI Name', ' AOI Start (sec)', ' AOI Duration (sec - U=UserControlled)', ' Viewers (#)', ' Total Viewers (#)', 'Unnamed: 11'], inplace=True)
 
-# eyetracking_phone1 = df_threechoice_eyetracking_all.iloc[::3].copy()
-# eyetracking_phone2 = df_threechoice_eyetracking_all.iloc[1::3].copy()
-# eyetracking_phone3 = df_threechoice_eyetracking_all.iloc[2::3].copy()
+eyetracking_phone1.rename(columns={' Ave Time to 1st View (sec)':'Phone 1 - Ave Time to 1st View (sec)', ' Ave Time Viewed (sec)':'Phone 1 - Ave Time Viewed (sec)', ' Ave Time Viewed (%)':'Phone 1 -  Ave Time Viewed (%)', ' Ave Fixations (#)':'Phone 1 -  Ave Fixations (#)', ' Revisitors (#)':'Phone 1 -  Revisitors (#)', ' Average Revisits (#)':'Phone 1 -  Average Revisits (#)'}, inplace=True)
+eyetracking_phone2.rename(columns={' Ave Time to 1st View (sec)':'Phone 2 - Ave Time to 1st View (sec)', ' Ave Time Viewed (sec)':'Phone 2 - Ave Time Viewed (sec)', ' Ave Time Viewed (%)':'Phone 2 -  Ave Time Viewed (%)', ' Ave Fixations (#)':'Phone 2 -  Ave Fixations (#)', ' Revisitors (#)':'Phone 2 -  Revisitors (#)', ' Average Revisits (#)':'Phone 2 -  Average Revisits (#)'}, inplace=True)
+eyetracking_phone3.rename(columns={' Ave Time to 1st View (sec)':'Phone 3 - Ave Time to 1st View (sec)', ' Ave Time Viewed (sec)':'Phone 3 - Ave Time Viewed (sec)', ' Ave Time Viewed (%)':'Phone 3 -  Ave Time Viewed (%)', ' Ave Fixations (#)':'Phone 3 -  Ave Fixations (#)', ' Revisitors (#)':'Phone 3 -  Revisitors (#)', ' Average Revisits (#)':'Phone 3 -  Average Revisits (#)'}, inplace=True)
+eyetracking_phone4.rename(columns={' Ave Time to 1st View (sec)':'Phone 4 - Ave Time to 1st View (sec)', ' Ave Time Viewed (sec)':'Phone 4 - Ave Time Viewed (sec)', ' Ave Time Viewed (%)':'Phone 4 -  Ave Time Viewed (%)', ' Ave Fixations (#)':'Phone 4 -  Ave Fixations (#)', ' Revisitors (#)':'Phone 4 -  Revisitors (#)', ' Average Revisits (#)':'Phone 4 -  Average Revisits (#)'}, inplace=True)
+eyetracking_phone5.rename(columns={' Ave Time to 1st View (sec)':'Phone 5 - Ave Time to 1st View (sec)', ' Ave Time Viewed (sec)':'Phone 5 - Ave Time Viewed (sec)', ' Ave Time Viewed (%)':'Phone 5 -  Ave Time Viewed (%)', ' Ave Fixations (#)':'Phone 5 -  Ave Fixations (#)', ' Revisitors (#)':'Phone 5 -  Revisitors (#)', ' Average Revisits (#)':'Phone 5 -  Average Revisits (#)'}, inplace=True)
 
-# eyetracking_phone1.reset_index(drop=True,inplace=True)
-# eyetracking_phone2.reset_index(drop=True,inplace=True)
-# eyetracking_phone3.reset_index(drop=True,inplace=True)
+ranking_responses = pd.concat([df_ranking_clean,phone1_ofp,phone2_ofp,phone3_ofp,phone4_ofp,phone5_ofp,eyetracking_phone1,eyetracking_phone2,eyetracking_phone3,eyetracking_phone4,eyetracking_phone5], axis=1)
+ranking_responses.rename(columns={0:'Phone Choice'}, inplace=True)
 
-# eyetracking_phone1.drop(columns=[' AOI Name', 'Unnamed: 11'], inplace=True)
-# eyetracking_phone2.drop(columns=[' AOI Name', ' AOI Start (sec)', ' AOI Duration (sec - U=UserControlled)', ' Viewers (#)', ' Total Viewers (#)', 'Unnamed: 11'], inplace=True)
-# eyetracking_phone3.drop(columns=[' AOI Name', ' AOI Start (sec)', ' AOI Duration (sec - U=UserControlled)', ' Viewers (#)', ' Total Viewers (#)', 'Unnamed: 11'], inplace=True)
+print(ranking_responses)
 
-# eyetracking_phone1.rename(columns={' Ave Time to 1st View (sec)':'Phone 1 - Ave Time to 1st View (sec)', ' Ave Time Viewed (sec)':'Phone 1 - Ave Time Viewed (sec)', ' Ave Time Viewed (%)':'Phone 1 -  Ave Time Viewed (%)', ' Ave Fixations (#)':'Phone 1 -  Ave Fixations (#)', ' Revisitors (#)':'Phone 1 -  Revisitors (#)', ' Average Revisits (#)':'Phone 1 -  Average Revisits (#)'}, inplace=True)
-# eyetracking_phone2.rename(columns={' Ave Time to 1st View (sec)':'Phone 2 - Ave Time to 1st View (sec)', ' Ave Time Viewed (sec)':'Phone 2 - Ave Time Viewed (sec)', ' Ave Time Viewed (%)':'Phone 2 -  Ave Time Viewed (%)', ' Ave Fixations (#)':'Phone 2 -  Ave Fixations (#)', ' Revisitors (#)':'Phone 2 -  Revisitors (#)', ' Average Revisits (#)':'Phone 2 -  Average Revisits (#)'}, inplace=True)
-# eyetracking_phone3.rename(columns={' Ave Time to 1st View (sec)':'Phone 3 - Ave Time to 1st View (sec)', ' Ave Time Viewed (sec)':'Phone 3 - Ave Time Viewed (sec)', ' Ave Time Viewed (%)':'Phone 3 -  Ave Time Viewed (%)', ' Ave Fixations (#)':'Phone 3 -  Ave Fixations (#)', ' Revisitors (#)':'Phone 3 -  Revisitors (#)', ' Average Revisits (#)':'Phone 3 -  Average Revisits (#)'}, inplace=True)
-
-# threechoice_responses = pd.concat([phone_selection_color,phone1,phone2,phone3,eyetracking_phone1,eyetracking_phone2,eyetracking_phone3], axis=1)
-# threechoice_responses.rename(columns={0:'Phone Choice'}, inplace=True)
+# writer = pd.ExcelWriter('output.xlsx')
+# # write dataframe to excel
+# ranking_responses.to_excel(writer)
+# # save the excel
+# writer.save()
