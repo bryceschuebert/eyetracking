@@ -128,7 +128,6 @@ ranking_responses = pd.concat([df_ranking_clean,phone1_ofp,phone2_ofp,phone3_ofp
 ranking_responses.rename(columns={0:'Phone Choice'}, inplace=True)
 
 print(ranking_responses)
-
 # writer = pd.ExcelWriter('output.xlsx')
 # # write dataframe to excel
 # ranking_responses.to_excel(writer)
