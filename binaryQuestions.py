@@ -2,6 +2,13 @@ import pandas as pd
 import numpy as np
 from cleanQuestions import getClean
 import re
+from sklearn import metrics
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import ComplementNB
+from sklearn import svm
+from sklearn.linear_model import SGDClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import RandomForestClassifier
 
 dic_analysis, dic_responses = getClean()
 
@@ -58,7 +65,7 @@ eyetracking_phone2 = df_binary_eyetracking_all.iloc[1::2].copy()
 eyetracking_phone1.reset_index(drop=True,inplace=True)
 eyetracking_phone2.reset_index(drop=True,inplace=True)
 
-eyetracking_phone1.drop(columns=[' AOI Name', 'Unnamed: 11'], inplace=True)
+eyetracking_phone1.drop(columns=[' AOI Name', 'Unnamed: 11', ' AOI Duration (sec - U=UserControlled)'], inplace=True)
 eyetracking_phone2.drop(columns=[' AOI Name', ' AOI Start (sec)', ' AOI Duration (sec - U=UserControlled)', ' Viewers (#)', ' Total Viewers (#)', 'Unnamed: 11'], inplace=True)
 
 eyetracking_phone1.rename(columns={' Ave Time to 1st View (sec)':'Phone 1 - Ave Time to 1st View (sec)', ' Ave Time Viewed (sec)':'Phone 1 - Ave Time Viewed (sec)', ' Ave Time Viewed (%)':'Phone 1 -  Ave Time Viewed (%)', ' Ave Fixations (#)':'Phone 1 -  Ave Fixations (#)', ' Revisitors (#)':'Phone 1 -  Revisitors (#)', ' Average Revisits (#)':'Phone 1 -  Average Revisits (#)'}, inplace=True)
@@ -67,10 +74,21 @@ eyetracking_phone2.rename(columns={' Ave Time to 1st View (sec)':'Phone 2 - Ave 
 binary_responses = pd.concat([phone_selection,phone1,phone2,eyetracking_phone1,eyetracking_phone2], axis=1)
 binary_responses.rename(columns={0:'Phone Choice'}, inplace=True)
 
-print(binary_responses)
 
-# writer = pd.ExcelWriter('output.xlsx')
-# # write dataframe to excel
-# binary_responses.to_excel(writer)
-# # save the excel
-# writer.save()
+print(binary_responses.groupby(by='Phone Choice').size())
+
+# Machine learning - Classification
+y = binary_responses['Phone Choice'].tolist()
+X_df = binary_responses.drop(columns=['Phone Choice'])
+X = X_df.values.tolist()
+X_train, X_test, y_train, y_test = train_test_split(X,y,stratify=y,test_size=0.2,random_state=501)
+
+# clf = svm.SVC()
+# clf = SGDClassifier(loss='hinge', penalty='l2',alpha=1e-3,random_state=42,max_iter=10,tol=None)
+# clf = KNeighborsClassifier(n_neighbors=8)
+# clf = RandomForestClassifier(n_estimators=10)
+clf = ComplementNB()
+y_pred = clf.fit(X_train, y_train).predict(X_test)
+
+print(metrics.confusion_matrix(y_test,y_pred))
+print(metrics.classification_report(y_test, y_pred, target_names=['Phone 1','Phone 2']))
