@@ -9,6 +9,7 @@ from sklearn import svm
 from sklearn.linear_model import SGDClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import AdaBoostClassifier
 
 dic_analysis, dic_responses = getClean()
 
@@ -77,19 +78,20 @@ binary_responses.rename(columns={0:'Phone Choice'}, inplace=True)
 
 
 # Machine learning - Classification
-
 print(binary_responses.groupby(by='Phone Choice').size())
 
 y = binary_responses['Phone Choice'].tolist()
-X_df = binary_responses.drop(columns=['Phone Choice']) # 'Phone 1 - Owned','Phone 1 - Familiarity','Phone 1 - Present','Phone 2 - Owned','Phone 2 - Familiarity','Phone 2 - Present'
+X_df = binary_responses.drop(columns=['Phone Choice','Phone 1 - Owned','Phone 1 - Familiarity','Phone 1 - Present','Phone 2 - Owned','Phone 2 - Familiarity','Phone 2 - Present','Phone 1 -  Ave Time Viewed (%)','Phone 2 -  Ave Time Viewed (%)']) # 'Phone 1 - Owned','Phone 1 - Familiarity','Phone 1 - Present','Phone 2 - Owned','Phone 2 - Familiarity','Phone 2 - Present'
 X = X_df.values.tolist()
 X_train, X_test, y_train, y_test = train_test_split(X,y,stratify=y,test_size=0.2,random_state=501)
+
 
 # clf = svm.SVC()
 # clf = SGDClassifier(loss='hinge', penalty='l2',alpha=1e-3,random_state=42,max_iter=10,tol=None)
 # clf = KNeighborsClassifier(n_neighbors=8)
 # clf = RandomForestClassifier(n_estimators=10)
-clf = ComplementNB()
+#clf = ComplementNB()
+clf = AdaBoostClassifier(n_estimators=100)
 y_pred = clf.fit(X_train, y_train).predict(X_test)
 
 print(metrics.confusion_matrix(y_test,y_pred))
