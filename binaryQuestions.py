@@ -81,7 +81,7 @@ binary_responses.rename(columns={0:'Phone Choice'}, inplace=True)
 print(binary_responses.groupby(by='Phone Choice').size())
 
 y = binary_responses['Phone Choice'].tolist()
-X_df = binary_responses.drop(columns=['Phone Choice','Phone 1 - Owned','Phone 1 - Familiarity','Phone 1 - Present','Phone 2 - Owned','Phone 2 - Familiarity','Phone 2 - Present','Phone 1 -  Ave Time Viewed (%)','Phone 2 -  Ave Time Viewed (%)']) # 'Phone 1 - Owned','Phone 1 - Familiarity','Phone 1 - Present','Phone 2 - Owned','Phone 2 - Familiarity','Phone 2 - Present'
+X_df = binary_responses.drop(columns=['Phone Choice','Phone 1 - Owned','Phone 1 - Familiarity','Phone 1 - Present','Phone 2 - Owned','Phone 2 - Familiarity','Phone 2 - Present']) # 'Phone 1 - Owned','Phone 1 - Familiarity','Phone 1 - Present','Phone 2 - Owned','Phone 2 - Familiarity','Phone 2 - Present'
 X = X_df.values.tolist()
 X_train, X_test, y_train, y_test = train_test_split(X,y,stratify=y,test_size=0.2,random_state=501)
 
