@@ -8,6 +8,7 @@ from sklearn import svm
 from sklearn.linear_model import SGDClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import AdaBoostClassifier
 
 dic_analysis, dic_responses = getClean()
 
@@ -62,7 +63,8 @@ X_train, X_test, y_train, y_test = train_test_split(X,y,stratify=y,test_size=0.2
 # clf = SGDClassifier(loss='hinge', penalty='l2',alpha=1e-3,random_state=42,max_iter=10,tol=None)
 # clf = KNeighborsClassifier(n_neighbors=8)
 # clf = RandomForestClassifier(n_estimators=10)
-clf = ComplementNB()
+# clf = ComplementNB()
+clf = AdaBoostClassifier()
 y_pred = clf.fit(X_train, y_train).predict(X_test)
 
 print(metrics.confusion_matrix(y_test,y_pred))
