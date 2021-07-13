@@ -10,6 +10,7 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import AdaBoostClassifier
+from sklearn.datasets import load_iris
 
 dic_analysis, dic_responses = getClean()
 
@@ -96,3 +97,10 @@ y_pred = clf.fit(X_train, y_train).predict(X_test)
 
 print(metrics.confusion_matrix(y_test,y_pred))
 print(metrics.classification_report(y_test, y_pred, target_names=['Phone 1','Phone 2']))
+
+# Xt, yt = load_iris(return_X_y=True)
+# Xt_train, Xt_test, yt_train, yt_test = train_test_split(Xt,yt,test_size=0.2,random_state=23)
+# clft = AdaBoostClassifier(n_estimators=100)
+
+# yt_pred = clft.fit(Xt_train, yt_train).predict(Xt_test)
+# print(metrics.confusion_matrix(yt_test,yt_pred))
