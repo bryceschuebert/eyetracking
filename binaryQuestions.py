@@ -11,6 +11,9 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.datasets import load_iris
+from sklearn.pipeline import Pipeline
+from sklearn.feature_selection import SelectFromModel
+from sklearn.linear_model import LogisticRegression
 
 dic_analysis, dic_responses = getClean()
 
@@ -67,6 +70,10 @@ eyetracking_phone2 = df_binary_eyetracking_all.iloc[1::2].copy()
 eyetracking_phone1.reset_index(drop=True,inplace=True)
 eyetracking_phone2.reset_index(drop=True,inplace=True)
 
+eyetracking_phone1['Phone 1 - Time to 1st View (sec)'] = (eyetracking_phone1[' Ave Time to 1st View (sec)'] - eyetracking_phone1[' AOI Start (sec)']).clip(lower=0)
+eyetracking_phone2['Phone 2 - Time to 1st View (sec)'] = (eyetracking_phone2[' Ave Time to 1st View (sec)'] - eyetracking_phone2[' AOI Start (sec)']).clip(lower=0)
+
+
 eyetracking_phone1.drop(columns=[' AOI Name', ' AOI Start (sec)', ' AOI Duration (sec - U=UserControlled)', ' Viewers (#)', ' Total Viewers (#)', ' Ave Time to 1st View (sec)', ' Revisitors (#)', 'Unnamed: 11'], inplace=True)
 eyetracking_phone2.drop(columns=[' AOI Name', ' AOI Start (sec)', ' AOI Duration (sec - U=UserControlled)', ' Viewers (#)', ' Total Viewers (#)', ' Ave Time to 1st View (sec)', ' Revisitors (#)', 'Unnamed: 11'], inplace=True)
 
@@ -92,7 +99,10 @@ X_train, X_test, y_train, y_test = train_test_split(X,y,stratify=y,test_size=0.2
 # clf = KNeighborsClassifier(n_neighbors=8)
 # clf = RandomForestClassifier(n_estimators=10)
 #clf = ComplementNB()
-clf = AdaBoostClassifier(n_estimators=100)
+clf = Pipeline([
+    ('feature_selection', SelectFromModel(LogisticRegression(random_state=0))),
+    ('classification', AdaBoostClassifier(n_estimators=20))
+])
 y_pred = clf.fit(X_train, y_train).predict(X_test)
 
 print(metrics.confusion_matrix(y_test,y_pred))
